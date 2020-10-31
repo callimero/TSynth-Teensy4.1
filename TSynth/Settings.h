@@ -1,5 +1,5 @@
-#define SETTINGSOPTIONSNO 11
-#define SETTINGSVALUESNO 18//Maximum number of settings option values needed
+#define SETTINGSOPTIONSNO 12 //11
+#define SETTINGSVALUESNO 19// 18 Maximum number of settings option values needed
 uint32_t settingsValueIndex = 0;//currently selected settings option value index
 
 struct SettingsOption
@@ -36,6 +36,17 @@ int currentIndexScopeEnable();
 int currentIndexVUEnable();
 int getCurrentIndex(int (*f)());
 
+// Einordnen! ...
+FLASHMEM void settingsLastPatch(char * value) {
+  //int lastPatch = atoi(value); //Zusammenfassen
+  storeLastPatch(atoi(value));
+}
+
+FLASHMEM int currentPatch() {
+  return getLastPatch();
+}
+
+/////////
 
 FLASHMEM void settingsMIDICh(char * value) {
   if (strcmp(value, "ALL") == 0) {
@@ -127,6 +138,8 @@ FLASHMEM void settingsVUEnable(char * value) {
   }
 }
 
+
+
 //Takes a pointer to a specific method for the settings option and invokes it.
 FLASHMEM void settingsHandler(char * s, void (*f)(char*) ) {
   f(s);
@@ -135,6 +148,8 @@ FLASHMEM void settingsHandler(char * s, void (*f)(char*) ) {
 FLASHMEM int currentIndexMIDICh() {
   return getMIDIChannel();
 }
+
+
 
 FLASHMEM int currentIndexVelocitySens() {
   return velocitySens;

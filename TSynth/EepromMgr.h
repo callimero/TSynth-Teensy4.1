@@ -9,6 +9,15 @@
 #define EEPROM_SCOPE_ENABLE 6
 #define EEPROM_MIDI_OUT_CH 7
 #define EEPROM_VU_ENABLE 8
+#define EEPROM_LASTPATCH_ENABLE 9
+
+FLASHMEM int getLastPatch() {
+  int lastPatch = EEPROM.read(EEPROM_LASTPATCH_ENABLE);
+  return lastPatch;
+}
+FLASHMEM void storeLastPatch(int patchnr){
+  EEPROM.update(EEPROM_LASTPATCH_ENABLE, patchnr);
+}
 
 FLASHMEM int getMIDIChannel() {
   byte midiChannel = EEPROM.read(EEPROM_MIDI_CH);

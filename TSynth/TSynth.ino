@@ -103,6 +103,8 @@ float previousMillis = millis(); //For MIDI Clk Sync
 
 uint32_t count = 0;//For MIDI Clk Sync
 uint32_t patchNo = 1;//Current patch no
+uint32_t lastPatch = 1; //CW
+
 uint32_t voiceToReturn = -1; //Initialise
 long earliestTime = millis(); //For voice allocation - initialise to now
 
@@ -277,6 +279,8 @@ FLASHMEM void setup() {
   enableScope(getScopeEnable());
   //Read VU enable from EEPROM
   vuMeter = getVUEnable();
+  //Read last patch from EEPROM CW
+  lastPatch = getLastPatch();
 }
 
 void incNotesOn() {
@@ -2200,6 +2204,8 @@ void myControlChange(byte channel, byte control, byte value) {
 }
 
 FLASHMEM void myProgramChange(byte channel, byte program) {
+//need to do the lastPatch here too?
+// Also after setting a patch Encoder turn makes a jump!
   state = PATCH;
   patchNo = program + 1;
   recallPatch(patchNo);
@@ -2279,6 +2285,10 @@ FLASHMEM void recallPatch(int patchNo) {
     recallPatchData(patchFile, data);
     setCurrentPatchData(data);
     patchFile.close();
+	  
+	//storeLastPatch(patchNo);  // Comment out ->Debug, not eating the EEprom
+  Serial.print(F("CW: lastPatch (Debug static!) :"));
+  Serial.println(patchNo);
   }
 }
 
@@ -2552,8 +2562,11 @@ void checkMux() {
     muxInput = 0;
     checkVolumePot();//Check here
     if (!firstPatchLoaded) {
-      recallPatch(patchNo); //Load first patch after all controls read
+		patchNo = lastPatch;	
+//      recallPatch(patchNo); //Load first patch after all controls read
+      recallPatch(lastPatch); //Load last used  patch after all controls read, reorder list?!
       firstPatchLoaded = true;
+	    state = PARAMETER;
       sgtl5000_1.unmuteHeadphone();
       sgtl5000_1.unmuteLineout();
     }
