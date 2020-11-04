@@ -12,8 +12,7 @@
 #define EEPROM_LASTPATCH_ENABLE 9
 
 FLASHMEM int getLastPatch() {
-  int lastPatch = EEPROM.read(EEPROM_LASTPATCH_ENABLE);
-  return lastPatch;
+  return(EEPROM.read(EEPROM_LASTPATCH_ENABLE));
 }
 FLASHMEM void storeLastPatch(int patchnr){
   EEPROM.update(EEPROM_LASTPATCH_ENABLE, patchnr);

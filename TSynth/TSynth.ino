@@ -103,7 +103,7 @@ float previousMillis = millis(); //For MIDI Clk Sync
 
 uint32_t count = 0;//For MIDI Clk Sync
 uint32_t patchNo = 1;//Current patch no
-uint32_t lastPatch = 1; //CW
+//uint32_t lastPatch = 1; //CW
 
 uint32_t voiceToReturn = -1; //Initialise
 long earliestTime = millis(); //For voice allocation - initialise to now
@@ -280,7 +280,7 @@ FLASHMEM void setup() {
   //Read VU enable from EEPROM
   vuMeter = getVUEnable();
   //Read last patch from EEPROM CW
-  lastPatch = getLastPatch();
+//  lastPatch = getLastPatch();
 }
 
 void incNotesOn() {
@@ -2307,12 +2307,15 @@ FLASHMEM void recallPatch(int patchNo) {
     recallPatchData(patchFile, data);
     setCurrentPatchData(data);
     patchFile.close();
-	  
-//	storeLastPatch(patchNo);  // Comment out ->Debug, not eating the EEprom
-  Serial.print(F("CW: lastPatch (Debug static!) :"));
+
+if (getLastPatch()>0)
+{
+  storeLastPatch(patchNo);  // Comment out ->Debug, not eating the EEprom
+  Serial.print(F("CW: Stored to EEPROM:"));
   Serial.println(patchNo);
   }
-}
+  }
+  }
 
 FLASHMEM void setCurrentPatchData(String data[]) {
   patchName = data[0];
@@ -2584,9 +2587,16 @@ void checkMux() {
     muxInput = 0;
     checkVolumePot();//Check here
     if (!firstPatchLoaded) {
-		patchNo = lastPatch;	
+		if (getLastPatch()>0)
+		{
+		patchNo = getLastPatch();	
+		}
+		else
+		{
+			patchNo = 1;
+		}
 //      recallPatch(patchNo); //Load first patch after all controls read
-      recallPatch(lastPatch); //Load last used  patch after all controls read, reorder list?!
+      recallPatch(patchNo); //Load last used  patch after all controls read, reorder list?!
       firstPatchLoaded = true;
 	    state = PARAMETER;
       sgtl5000_1.unmuteHeadphone();

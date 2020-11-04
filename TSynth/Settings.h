@@ -1,5 +1,5 @@
 #define SETTINGSOPTIONSNO 12 //11
-#define SETTINGSVALUESNO 19// 18 Maximum number of settings option values needed
+#define SETTINGSVALUESNO 18// 18 Maximum number of settings option values needed
 uint32_t settingsValueIndex = 0;//currently selected settings option value index
 
 struct SettingsOption
@@ -21,6 +21,7 @@ void settingsPickupEnable(char * value);
 void settingsBassEnhanceEnable(char * value);
 void settingsScopeEnable(char * value);
 void settingsVUEnable(char * value);
+void settingsLastPatch(char * value);
 void settingsHandler(char * s, void (*f)(char*));
 
 int currentIndexMIDICh();
@@ -34,15 +35,27 @@ int currentIndexPickupEnable();
 int currentIndexBassEnhanceEnable();
 int currentIndexScopeEnable();
 int currentIndexVUEnable();
+int currentIndexLastPatch();
 int getCurrentIndex(int (*f)());
 
-// Einordnen! ...
+
+// Einordnen! ... cw
 FLASHMEM void settingsLastPatch(char * value) {
+  if (strcmp(value, "Off") == 0) {
+    storeLastPatch(0);
+	  Serial.print(F("EEPROM LastPatch OFF:"));
+  Serial.println(getLastPatch());
+
+  } else {
+	  Serial.print(F("EEPROM LastPatch ON:"));
+  Serial.println(getLastPatch());
+	storeLastPatch(1);
+  }
   //int lastPatch = atoi(value); //Zusammenfassen
-  storeLastPatch(atoi(value));
+  
 }
 
-FLASHMEM int currentPatch() {
+FLASHMEM int currentLastPatch() {
   return getLastPatch();
 }
 
@@ -194,6 +207,18 @@ FLASHMEM int currentIndexVUEnable() {
   return getVUEnable() ? 1 : 0;
 }
 
+FLASHMEM int currentIndexLastPatch() {
+		  Serial.print(F("currentIndexLastPatch: "));
+  Serial.println(getLastPatch());
+if (getLastPatch() == 0)
+{return(0);}
+else
+{
+  return(1);
+  
+}
+}
+
 //Takes a pointer to a specific method for the current settings option value and invokes it.
 FLASHMEM int getCurrentIndex(int (*f)() ) {
   return f();
@@ -213,5 +238,6 @@ FLASHMEM void setUpSettings() {
   settingsOptions.push(SettingsOption{"Pick-up", {"Off", "On", '\0'}, settingsPickupEnable, currentIndexPickupEnable});
   settingsOptions.push(SettingsOption{"Bass Enh.", {"Off", "On", '\0'}, settingsBassEnhanceEnable, currentIndexBassEnhanceEnable});
   settingsOptions.push(SettingsOption{"Oscilloscope", {"Off", "On", '\0'}, settingsScopeEnable, currentIndexScopeEnable});
-  settingsOptions.push(SettingsOption{"VU Meter", {"Off", "On", '\0'}, settingsVUEnable, currentIndexVUEnable});
+  settingsOptions.push(SettingsOption{"VU Meter", {"Off", "On", '\0'}, settingsVUEnable, currentIndexVUEnable}),
+  settingsOptions.push(SettingsOption{"Last Patch", {"Off", "On", '\0'}, settingsLastPatch, currentIndexLastPatch});
 }
