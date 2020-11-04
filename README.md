@@ -1,3 +1,5 @@
+# NOT THE OFFICIAL... WILL CONTAIN BAD HACKS
+
 ![](https://electrotechnique.github.io/etlogo.png)
 
 # Teensy 4.1 based synthesizer using PJRC Audio Board and Audio Lib
