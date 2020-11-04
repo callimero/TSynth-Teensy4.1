@@ -63,7 +63,9 @@ float ampRelease = 300.0f;
 float fxAmt = 1.0f;
 float fxMix = 0.0f;
 
-int velocitySens = 0;//Default off - settings option
+int ampHold = 0;
+
+int velocitySens = 3;//Default off - settings option
 
 boolean vuMeter = false;
 

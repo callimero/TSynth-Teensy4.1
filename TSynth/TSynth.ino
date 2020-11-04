@@ -2165,6 +2165,23 @@ void myControlChange(byte channel, byte control, byte value) {
       updateRelease();
       break;
 
+    case CChold:
+	 if (value>0)
+		{
+			ampHold = ampRelease;
+			ampRelease = ampDecay;
+		}
+		else
+		{
+			ampRelease=ampHold;
+			allNotesOff();
+			closeEnvelopes();
+		}
+		updateRelease();
+		Serial.print(F("CC Hold:"));
+		Serial.println(value);
+		break;
+
     case CCoscfx:
       switch (value) {
         case 0:
@@ -2286,7 +2303,7 @@ FLASHMEM void recallPatch(int patchNo) {
     setCurrentPatchData(data);
     patchFile.close();
 	  
-	//storeLastPatch(patchNo);  // Comment out ->Debug, not eating the EEprom
+//	storeLastPatch(patchNo);  // Comment out ->Debug, not eating the EEprom
   Serial.print(F("CW: lastPatch (Debug static!) :"));
   Serial.println(patchNo);
   }
