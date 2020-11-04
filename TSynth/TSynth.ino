@@ -668,6 +668,8 @@ void endVoice(int voice) {
 }
 
 void myNoteOff(byte channel, byte note, byte velocity) {
+if (ampHold==0)
+{
   decNotesOn();
   if (unison == 0) {
     endVoice(getVoiceNo(note));
@@ -676,6 +678,7 @@ void myNoteOff(byte channel, byte note, byte velocity) {
     for (int i = 0; i < NO_OF_VOICES; i++) {
       endVoice(getVoiceNo(note));
     }
+  }
   }
 }
 
@@ -2169,15 +2172,17 @@ void myControlChange(byte channel, byte control, byte value) {
 	 if (value>0)
 		{
 			ampHold = ampRelease;
-			ampRelease = ampDecay;
+//			ampRelease = ampDecay;
 		}
 		else
 		{
-			ampRelease=ampHold;
-			allNotesOff();
-			closeEnvelopes();
+//			ampRelease=ampHold;
+			ampHold=0;
+//			updateRelease();
+		allNotesOff();
+		//	closeEnvelopes();
 		}
-		updateRelease();
+//		updateRelease();
 		Serial.print(F("CC Hold:"));
 		Serial.println(value);
 		break;
