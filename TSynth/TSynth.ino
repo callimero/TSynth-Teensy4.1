@@ -2597,6 +2597,7 @@ void checkMux() {
 		}
 //      recallPatch(patchNo); //Load first patch after all controls read
       recallPatch(patchNo); //Load last used  patch after all controls read, reorder list?!
+	setPatchesOrdering(patchNo);
       firstPatchLoaded = true;
 	    state = PARAMETER;
       sgtl5000_1.unmuteHeadphone();
