@@ -296,6 +296,57 @@ void myNoteOn(byte channel, byte note, byte velocity) {
   if (note + oscPitchA < 0 || note + oscPitchA > 127 || note + oscPitchB < 0 || note + oscPitchB > 127)
     return;
 
+//CW!voiceon
+// Needs to be integrated to the switch below. Was just easier to test this way
+// need to find a function to control the level of velocity controlled cutoff, Korg Monologue only has 0%/50%/100% whatever this means :)
+// Also maybe nice to decouple it from volume velocity...
+//Serial.println(getVoiceNo(-1));
+//Serial.print("   ");
+//Serial.println(VELOCITY[1][velocity]);
+
+	// Only works when velocity is ON!
+	int filtervelo = FILTERVEL*VELOCITY[velocitySens][velocity]; // just for testing until found a better formula
+
+    switch (getVoiceNo(-1))  {
+      case 1:
+		filter1.frequency(filterFreq*filtervelo);
+		break;
+      case 2:
+		filter2.frequency(filterFreq*filtervelo);
+		break;
+      case 3:
+		filter3.frequency(filterFreq*filtervelo);
+		break;
+      case 4:
+		filter4.frequency(filterFreq*filtervelo);
+		break;
+      case 5:
+		filter5.frequency(filterFreq*filtervelo);
+		break;
+      case 6:
+		filter6.frequency(filterFreq*filtervelo);
+		break;
+      case 7:
+		filter7.frequency(filterFreq*filtervelo);
+		break;
+      case 8:
+		filter8.frequency(filterFreq*filtervelo);
+		break;
+      case 9:
+		filter9.frequency(filterFreq*filtervelo);
+		break;
+      case 10:
+		filter10.frequency(filterFreq*filtervelo);
+		break;
+      case 11:
+		filter11.frequency(filterFreq*filtervelo);
+		break;
+      case 12:
+		filter12.frequency(filterFreq*filtervelo);
+		break;
+	}
+ 
+
   if (unison == 1) incNotesOn();//For Unison mode
 
 
