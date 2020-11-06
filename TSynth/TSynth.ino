@@ -303,16 +303,63 @@ void myNoteOn(byte channel, byte note, byte velocity) {
 // Needs to be integrated to the switch below. Was just easier to test this way
 // need to find a function to control the level of velocity controlled cutoff, Korg Monologue only has 0%/50%/100% whatever this means :)
 
-//Serial.println(velocityFilterLevel);
-//Serial.print("   ");
+Serial.println(keytrackingAmount);
+Serial.print("   ");
 
-
+// whats about setFilterModMixer(2, keytrackingAmount); .... Ermm...
+// filterModMixer1.gain(2, keytrackingAmount+(filtervelo/10.0));
+		float filtervelo = (velocityFilterLevel-0.2)*VELOCITY[1][velocity]; // 
+			
+    switch (getVoiceNo(-1))  {
+      case 1:
+		filterModMixer1.gain(2, keytrackingAmount+(filtervelo/VELOFILTERSCALE));
+		break;
+      case 2:
+		filterModMixer2.gain(2, keytrackingAmount+(filtervelo/VELOFILTERSCALE));
+		break;
+      case 3:
+		filterModMixer3.gain(2, keytrackingAmount+(filtervelo/VELOFILTERSCALE));
+		break;
+      case 4:
+		filterModMixer4.gain(2, keytrackingAmount+(filtervelo/VELOFILTERSCALE));
+		break;
+      case 5:
+		filterModMixer5.gain(2, keytrackingAmount+(filtervelo/VELOFILTERSCALE));
+		break;
+      case 6:
+		filterModMixer6.gain(2, keytrackingAmount+(filtervelo/VELOFILTERSCALE));
+		break;
+      case 7:
+		filterModMixer7.gain(2, keytrackingAmount+(filtervelo/VELOFILTERSCALE));
+		break;
+      case 8:
+		filterModMixer8.gain(2, keytrackingAmount+(filtervelo/VELOFILTERSCALE));
+		break;
+      case 9:
+		filterModMixer9.gain(2, keytrackingAmount+(filtervelo/VELOFILTERSCALE));
+		break;
+      case 10:
+		filterModMixer10.gain(2, keytrackingAmount+(filtervelo/VELOFILTERSCALE));
+		break;
+      case 11:
+		filterModMixer11.gain(2, keytrackingAmount+(filtervelo/VELOFILTERSCALE));
+		break;
+      case 12:
+		filterModMixer12.gain(2, keytrackingAmount+(filtervelo/VELOFILTERSCALE));
+		break;
+	}
+	
 	if (velocityFilterLevel>0.0)
 	{
 		// Choose which curve to use..... 1 linear, etc. see velocity
 		float filtervelo = (velocityFilterLevel-0.2)*VELOCITY[1][velocity]; // just for testing until found a better formula
-		Serial.println(filterFreq*filtervelo);
-
+		Serial.println(filterFreq+filtervelo);
+// hmm channel?! -> 
+//setFilterModMixer(2, keytrackingAmount+(filtervelo/VELOFILTERSCALE));
+//filterModMixer1.gain(channel, level);
+	
+/*
+	// this works but is very unelegant :)
     switch (getVoiceNo(-1))  {
       case 1:
 		filter1.frequency(filterFreq*filtervelo);
@@ -351,7 +398,8 @@ void myNoteOn(byte channel, byte note, byte velocity) {
 		filter12.frequency(filterFreq*filtervelo);
 		break;
 	}
-		}
+*/
+	}
  
 
   if (unison == 1) incNotesOn();//For Unison mode
@@ -1674,7 +1722,7 @@ FLASHMEM void setFilterModMixer(int channel, float level) {
 }
 
 FLASHMEM void updateOscLFOAmt() {
-  pitchLfo.amplitude(oscLfoAmt + modWhAmt);
+  pitchLfo.amplitude(oscLfoAmt/10.0 + modWhAmt);
   char buf[10];
   showCurrentParameterPage("LFO Amount", dtostrf(oscLfoAmt, 4, 3, buf));
 }
