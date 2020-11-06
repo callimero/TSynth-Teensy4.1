@@ -302,14 +302,15 @@ void myNoteOn(byte channel, byte note, byte velocity) {
 //CW!voiceon
 // Needs to be integrated to the switch below. Was just easier to test this way
 // need to find a function to control the level of velocity controlled cutoff, Korg Monologue only has 0%/50%/100% whatever this means :)
-// Also maybe nice to decouple it from volume velocity...
+
 //Serial.println(velocityFilterLevel);
 //Serial.print("   ");
 
-	// Only works when velocity is ON!
+
 	if (velocityFilterLevel>0.0)
 	{
-		float filtervelo = velocityFilterLevel*VELOCITY[velocitySens][velocity]; // just for testing until found a better formula
+		// Choose which curve to use..... 1 linear, etc. see velocity
+		float filtervelo = (velocityFilterLevel-0.2)*VELOCITY[1][velocity]; // just for testing until found a better formula
 		Serial.println(filterFreq*filtervelo);
 
     switch (getVoiceNo(-1))  {
