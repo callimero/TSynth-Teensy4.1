@@ -10,12 +10,20 @@
 #define EEPROM_MIDI_OUT_CH 7
 #define EEPROM_VU_ENABLE 8
 #define EEPROM_LASTPATCH_ENABLE 9
+#define EEPROM_FILTER_VELOCITY 10
 
 FLASHMEM int getLastPatch() {
   return(EEPROM.read(EEPROM_LASTPATCH_ENABLE));
 }
 FLASHMEM void storeLastPatch(int patchnr){
   EEPROM.update(EEPROM_LASTPATCH_ENABLE, patchnr);
+}
+
+FLASHMEM int getFilterVel() {
+  return(EEPROM.read(EEPROM_FILTER_VELOCITY));
+}
+FLASHMEM void storeFilterVel(int filterVel){
+  EEPROM.update(EEPROM_FILTER_VELOCITY, filterVel);
 }
 
 FLASHMEM int getMIDIChannel() {

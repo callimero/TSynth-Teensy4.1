@@ -1,4 +1,4 @@
-#define SETTINGSOPTIONSNO 12 //11
+#define SETTINGSOPTIONSNO 13 //11 + Last Patch + FilterVel
 #define SETTINGSVALUESNO 18// 18 Maximum number of settings option values needed
 uint32_t settingsValueIndex = 0;//currently selected settings option value index
 
@@ -22,6 +22,7 @@ void settingsBassEnhanceEnable(char * value);
 void settingsScopeEnable(char * value);
 void settingsVUEnable(char * value);
 void settingsLastPatch(char * value);
+void settingsFilterVel(char * value);
 void settingsHandler(char * s, void (*f)(char*));
 
 int currentIndexMIDICh();
@@ -36,6 +37,7 @@ int currentIndexBassEnhanceEnable();
 int currentIndexScopeEnable();
 int currentIndexVUEnable();
 int currentIndexLastPatch();
+int currentIndexFilterVel();
 int getCurrentIndex(int (*f)());
 
 
@@ -58,6 +60,22 @@ FLASHMEM void settingsLastPatch(char * value) {
 FLASHMEM int currentLastPatch() {
   return getLastPatch();
 }
+
+
+
+FLASHMEM void settingsFilterVel(char * value) {
+  if (strcmp(value, "Off") == 0) {
+    velocityFilterLevel = 0.0;
+  } else {
+    velocityFilterLevel = float(atoi(value));
+  }
+  storeFilterVel(int(velocityFilterLevel));
+}
+
+FLASHMEM int currentFilterVel() {
+  return getFilterVel();
+}
+
 
 /////////
 
@@ -162,8 +180,6 @@ FLASHMEM int currentIndexMIDICh() {
   return getMIDIChannel();
 }
 
-
-
 FLASHMEM int currentIndexVelocitySens() {
   return velocitySens;
 }
@@ -219,6 +235,11 @@ else
 }
 }
 
+FLASHMEM int currentIndexFilterVel() {
+  return getFilterVel();
+}
+
+
 //Takes a pointer to a specific method for the current settings option value and invokes it.
 FLASHMEM int getCurrentIndex(int (*f)() ) {
   return f();
@@ -239,5 +260,6 @@ FLASHMEM void setUpSettings() {
   settingsOptions.push(SettingsOption{"Bass Enh.", {"Off", "On", '\0'}, settingsBassEnhanceEnable, currentIndexBassEnhanceEnable});
   settingsOptions.push(SettingsOption{"Oscilloscope", {"Off", "On", '\0'}, settingsScopeEnable, currentIndexScopeEnable});
   settingsOptions.push(SettingsOption{"VU Meter", {"Off", "On", '\0'}, settingsVUEnable, currentIndexVUEnable}),
-  settingsOptions.push(SettingsOption{"Last Patch", {"Off", "On", '\0'}, settingsLastPatch, currentIndexLastPatch});
+  settingsOptions.push(SettingsOption{"Last Patch", {"Off", "On", '\0'}, settingsLastPatch, currentIndexLastPatch}),
+  settingsOptions.push(SettingsOption{"Filter Vel", {"Off", "1", "2", "3", "4", "5", "6", "7", "8", "9", '\0'}, settingsFilterVel, currentIndexFilterVel});
 }

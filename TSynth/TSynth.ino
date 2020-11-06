@@ -279,8 +279,11 @@ FLASHMEM void setup() {
   enableScope(getScopeEnable());
   //Read VU enable from EEPROM
   vuMeter = getVUEnable();
-  //Read last patch from EEPROM CW
+  //Read last patch from EEPROM CW!
 //  lastPatch = getLastPatch();
+  // Read Filter Velocity Level from EEPROM CW!
+//  EEPROM.update(EEPROM_FILTER_VELOCITY, 3);
+   velocityFilterLevel = float(getFilterVel());
 }
 
 void incNotesOn() {
@@ -300,12 +303,14 @@ void myNoteOn(byte channel, byte note, byte velocity) {
 // Needs to be integrated to the switch below. Was just easier to test this way
 // need to find a function to control the level of velocity controlled cutoff, Korg Monologue only has 0%/50%/100% whatever this means :)
 // Also maybe nice to decouple it from volume velocity...
-//Serial.println(getVoiceNo(-1));
+//Serial.println(velocityFilterLevel);
 //Serial.print("   ");
-//Serial.println(VELOCITY[1][velocity]);
 
 	// Only works when velocity is ON!
-	int filtervelo = FILTERVEL*VELOCITY[velocitySens][velocity]; // just for testing until found a better formula
+	if (velocityFilterLevel>0.0)
+	{
+		float filtervelo = velocityFilterLevel*VELOCITY[velocitySens][velocity]; // just for testing until found a better formula
+		Serial.println(filterFreq*filtervelo);
 
     switch (getVoiceNo(-1))  {
       case 1:
@@ -345,6 +350,7 @@ void myNoteOn(byte channel, byte note, byte velocity) {
 		filter12.frequency(filterFreq*filtervelo);
 		break;
 	}
+		}
  
 
   if (unison == 1) incNotesOn();//For Unison mode

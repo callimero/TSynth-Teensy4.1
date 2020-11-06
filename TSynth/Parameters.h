@@ -66,7 +66,8 @@ float fxMix = 0.0f;
 int ampHold = 0;
 
 int velocitySens = 3;//Default off - settings option
-
+float velocityFilterLevel = 3.0;
+	
 boolean vuMeter = false;
 
 //Pick-up - Experimental feature
